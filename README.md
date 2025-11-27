@@ -20,7 +20,7 @@ O sistema opera através da seguinte arquitetura integrada:
 
 1.  **Hardware/Simulação (Wokwi):**
     * **ESP32 (Sensor):** Conectado a um sensor ultrassônico **HC-SR04**. Mede a distância livre na lixeira, calcula o volume ocupado e publica via MQTT.
-    * **ESP32 (Atuador):** Conectado a um LED. Assina o tópico MQTT e acende o LED caso a lixeira esteja cheia (< 15cm livres).
+    * **ESP32 (Atuador):** Conectado a um LED. Assina o tópico MQTT e acende o LED caso a lixeira esteja cheia (<= 15cm livres).
 2.  **Comunicação:** Protocolo **MQTT** para troca de mensagens entre dispositivos e servidor.
 3.  **Backend (AWS):**
     * **Node-RED:** Hospedado em uma instância EC2 Linux na AWS. Recebe os dados MQTT, processa a lógica de "Lixeira Cheia" e envia notificações via WhatsApp API.
