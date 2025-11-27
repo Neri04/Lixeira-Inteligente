@@ -44,7 +44,8 @@ O sistema permite a visualização de dois painéis principais:
 2.  **Histórico:** Gráfico temporal mostrando a evolução do lixo durante o dia, permitindo identificar horários de pico.
 
 ##  Links Úteis
-* [Link para Simulação Wokwi](INSERIR_LINK_AQUI)
+* [ESP32 1 - Dispositivo do Sensor(Publisher MQTT)](https://wokwi.com/projects/448555483116581889)
+* [ESP32 2 - Dispositivo do LED(Subscriber MQTT)](https://wokwi.com/projects/448610000959539201)
 * [Artigo Completo (PDF)](docs/artigo_final.pdf)
 
 ---
