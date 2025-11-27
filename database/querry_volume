@@ -1,0 +1,6 @@
+SELECT *
+FROM "Vol"
+WHERE
+time >= now() - interval '1 hour'
+AND
+("value" IS NOT NULL)
