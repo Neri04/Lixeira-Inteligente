@@ -1,0 +1,831 @@
+[
+    {
+        "id": "a271d9fc22e6e39d",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "958e13c05064e38e",
+        "type": "function",
+        "z": "a271d9fc22e6e39d",
+        "d": true,
+        "name": "function 1",
+        "func": "// Recebe a temperatura enviada pelo broker MQTT\nlet temperatura = msg.payload;\n\n// Variável para armazenar a mensagem correspondente\nlet mensagem = \"\";\n\n// Verifica a faixa de temperatura conforme a tabela\nif (temperatura > 45) {\n    mensagem = \"Sufocante\";\n} else if (temperatura >= 31 && temperatura <= 45) {\n    mensagem = \"Quente\";\n} else if (temperatura >= 24 && temperatura <= 30) {\n    mensagem = \"Morno\";\n} else if (temperatura >= 19 && temperatura <= 23) {\n    mensagem = \"Fresco\";\n} else if (temperatura >= -15 && temperatura <= 18) {\n    mensagem = \"Frio\";\n} else if (temperatura < -15) {\n    mensagem = \"Congelante\";\n} else {\n    mensagem = \"Temperatura fora do intervalo definido\";\n}\n\n// Mostra no debug a temperatura e a mensagem\nnode.warn('Temperatura: + ${temperatura} + °C - Condição: + ${mensagem}');\n\n// Retorna a mensagem no fluxo (opcional)\nmsg.payload = {\n    temperatura: temperatura,\n    condicao: mensagem\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 200,
+        "wires": [
+            [
+                "f09f1cab43dfe7f5"
+            ]
+        ]
+    },
+    {
+        "id": "c492d9c22011dac0",
+        "type": "mqtt in",
+        "z": "a271d9fc22e6e39d",
+        "d": true,
+        "name": "mqtt-mack-pub-sub",
+        "topic": "RA10427342/Temperatura",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "4e2a64169f90c971",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 190,
+        "y": 200,
+        "wires": [
+            [
+                "958e13c05064e38e"
+            ]
+        ]
+    },
+    {
+        "id": "f09f1cab43dfe7f5",
+        "type": "debug",
+        "z": "a271d9fc22e6e39d",
+        "name": "debug 1",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "e993cc8e224c95cb",
+        "type": "inject",
+        "z": "a271d9fc22e6e39d",
+        "d": true,
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 200,
+        "y": 380,
+        "wires": [
+            [
+                "167e62494d908fb7"
+            ]
+        ]
+    },
+    {
+        "id": "167e62494d908fb7",
+        "type": "http request",
+        "z": "a271d9fc22e6e39d",
+        "d": true,
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "https://api.openweathermap.org/data/2.5/weather?lat=-23.5337&lon=-46.6252&appid=5cfce44c4e9dfa72c4511cfe8fee7b0a",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 410,
+        "y": 380,
+        "wires": [
+            [
+                "97b1fe2ebd658cc8"
+            ]
+        ]
+    },
+    {
+        "id": "b5753b19d46bc63e",
+        "type": "debug",
+        "z": "a271d9fc22e6e39d",
+        "name": "debug 2",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 840,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "97b1fe2ebd658cc8",
+        "type": "change",
+        "z": "a271d9fc22e6e39d",
+        "d": true,
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.main.temp",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 620,
+        "y": 380,
+        "wires": [
+            [
+                "b5753b19d46bc63e"
+            ]
+        ]
+    },
+    {
+        "id": "684c2fd389fc31bc",
+        "type": "inject",
+        "z": "a271d9fc22e6e39d",
+        "d": true,
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "Inject 1",
+        "payloadType": "str",
+        "x": 210,
+        "y": 520,
+        "wires": [
+            [
+                "172a75b1338a798b"
+            ]
+        ]
+    },
+    {
+        "id": "a6284fcead250610",
+        "type": "inject",
+        "z": "a271d9fc22e6e39d",
+        "d": true,
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "Inject 2",
+        "payloadType": "str",
+        "x": 210,
+        "y": 620,
+        "wires": [
+            [
+                "172a75b1338a798b"
+            ]
+        ]
+    },
+    {
+        "id": "172a75b1338a798b",
+        "type": "join",
+        "z": "a271d9fc22e6e39d",
+        "d": true,
+        "name": "",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 430,
+        "y": 560,
+        "wires": [
+            [
+                "84561314d4f49add"
+            ]
+        ]
+    },
+    {
+        "id": "84561314d4f49add",
+        "type": "function",
+        "z": "a271d9fc22e6e39d",
+        "d": true,
+        "name": "function 2",
+        "func": "var mensagem1 = msg.payload[0];\nvar mensagem2 = msg.payload[1];\nmsg.payload = \"A mensagem do primeiro é: \" + mensagem1 + \" a mensagem do segundo é: \" + mensagem2;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 640,
+        "y": 560,
+        "wires": [
+            [
+                "47a277ccd0959346"
+            ]
+        ]
+    },
+    {
+        "id": "47a277ccd0959346",
+        "type": "debug",
+        "z": "a271d9fc22e6e39d",
+        "name": "debug 3",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 820,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "a584c6de44fa4420",
+        "type": "inject",
+        "z": "a271d9fc22e6e39d",
+        "d": true,
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "Beta",
+        "payloadType": "str",
+        "x": 210,
+        "y": 700,
+        "wires": [
+            [
+                "d4127f1911085c7e"
+            ]
+        ]
+    },
+    {
+        "id": "c88c02a110fe7ecf",
+        "type": "debug",
+        "z": "a271d9fc22e6e39d",
+        "name": "debug 4",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 700,
+        "wires": []
+    },
+    {
+        "id": "d4127f1911085c7e",
+        "type": "node-red-contrib-whatsapp-cmb-send-message",
+        "z": "a271d9fc22e6e39d",
+        "d": true,
+        "name": "",
+        "credtype": "account",
+        "account": "9336b3ba416f0565",
+        "text": "payload",
+        "phonenumbervalue": "",
+        "apikeyvalue": "",
+        "apikeyinputtypemessage": "msg",
+        "phonenumberinputtypemessage": "msg",
+        "inputtypemessage": "msg",
+        "rejectssl": false,
+        "x": 420,
+        "y": 700,
+        "wires": [
+            [
+                "c88c02a110fe7ecf"
+            ]
+        ]
+    },
+    {
+        "id": "f586a7b7216dc802",
+        "type": "node-red-contrib-whatsapp-cmb-send-message",
+        "z": "a271d9fc22e6e39d",
+        "d": true,
+        "name": "",
+        "credtype": "account",
+        "account": "9336b3ba416f0565",
+        "text": "payload",
+        "phonenumbervalue": "",
+        "apikeyvalue": "",
+        "apikeyinputtypemessage": "msg",
+        "phonenumberinputtypemessage": "msg",
+        "inputtypemessage": "msg",
+        "rejectssl": false,
+        "x": 1140,
+        "y": 860,
+        "wires": [
+            [
+                "96bc34e94510fb9a"
+            ]
+        ]
+    },
+    {
+        "id": "f0de1b947be9a3c7",
+        "type": "mqtt in",
+        "z": "a271d9fc22e6e39d",
+        "d": true,
+        "name": "mqtt-mack-pub-sub",
+        "topic": "RA10427342/Temperatura",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "4e2a64169f90c971",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 230,
+        "y": 920,
+        "wires": [
+            [
+                "496dc7e269945022"
+            ]
+        ]
+    },
+    {
+        "id": "83501152d899b140",
+        "type": "join",
+        "z": "a271d9fc22e6e39d",
+        "name": "",
+        "mode": "custom",
+        "build": "array",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "",
+        "reduceFixup": "",
+        "x": 770,
+        "y": 860,
+        "wires": [
+            [
+                "dd588458fbae9a90"
+            ]
+        ]
+    },
+    {
+        "id": "ee2a9fa8e14d2ddf",
+        "type": "inject",
+        "z": "a271d9fc22e6e39d",
+        "d": true,
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "*/5 0-22 * * *",
+        "once": true,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 210,
+        "y": 800,
+        "wires": [
+            [
+                "50e041e32af3fa24"
+            ]
+        ]
+    },
+    {
+        "id": "50e041e32af3fa24",
+        "type": "http request",
+        "z": "a271d9fc22e6e39d",
+        "d": true,
+        "name": "",
+        "method": "GET",
+        "ret": "obj",
+        "paytoqs": "ignore",
+        "url": "http://api.openweathermap.org/data/2.5/weather?q=Sao%20Paulo&units=metric&APPID=5cfce44c4e9dfa72c4511cfe8fee7b0a",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 410,
+        "y": 800,
+        "wires": [
+            [
+                "1ef0fc7ffe65330a"
+            ]
+        ]
+    },
+    {
+        "id": "dd588458fbae9a90",
+        "type": "function",
+        "z": "a271d9fc22e6e39d",
+        "name": "function 4",
+        "func": "var mensagem1 = msg.payload[0];\nvar mensagem2 = msg.payload[1];\nmsg.payload = \"A temperatura lida no sensor é \" + mensagem2 + \" ºC e a temperatura lida na API é \" + mensagem1 + \" ºC.\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 940,
+        "y": 860,
+        "wires": [
+            [
+                "f586a7b7216dc802"
+            ]
+        ]
+    },
+    {
+        "id": "6ff3a2c2b90b062a",
+        "type": "change",
+        "z": "a271d9fc22e6e39d",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.main.temp",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 600,
+        "y": 920,
+        "wires": [
+            [
+                "83501152d899b140"
+            ]
+        ]
+    },
+    {
+        "id": "1ef0fc7ffe65330a",
+        "type": "change",
+        "z": "a271d9fc22e6e39d",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "payload.main.temp",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 600,
+        "y": 800,
+        "wires": [
+            [
+                "83501152d899b140"
+            ]
+        ]
+    },
+    {
+        "id": "96bc34e94510fb9a",
+        "type": "debug",
+        "z": "a271d9fc22e6e39d",
+        "name": "debug 5",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1340,
+        "y": 860,
+        "wires": []
+    },
+    {
+        "id": "496dc7e269945022",
+        "type": "delay",
+        "z": "a271d9fc22e6e39d",
+        "d": true,
+        "name": "",
+        "pauseType": "rate",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "5",
+        "rateUnits": "minute",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 420,
+        "y": 920,
+        "wires": [
+            [
+                "6ff3a2c2b90b062a"
+            ]
+        ]
+    },
+    {
+        "id": "2d9f2d9d845b0e38",
+        "type": "mqtt in",
+        "z": "a271d9fc22e6e39d",
+        "name": "mqtt-mack-pub-sub",
+        "topic": "RA10427342/Distancia",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "4e2a64169f90c971",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 270,
+        "y": 1300,
+        "wires": [
+            [
+                "1a0d593a73a32087",
+                "e505f3c5a18957c8",
+                "c545ea67ec386f7d"
+            ]
+        ]
+    },
+    {
+        "id": "80d99516057e4022",
+        "type": "debug",
+        "z": "a271d9fc22e6e39d",
+        "name": "debug 6",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 680,
+        "y": 1220,
+        "wires": []
+    },
+    {
+        "id": "415d242dd2b8eccb",
+        "type": "influxdb out",
+        "z": "a271d9fc22e6e39d",
+        "influxdb": "16aa5674a936393f",
+        "name": "InfluxDB Account",
+        "measurement": "Vol",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "IOT_Learner",
+        "bucket": "projetoVol",
+        "x": 810,
+        "y": 1300,
+        "wires": []
+    },
+    {
+        "id": "f1633bcd57893008",
+        "type": "node-red-contrib-whatsapp-cmb-send-message",
+        "z": "a271d9fc22e6e39d",
+        "name": "",
+        "credtype": "account",
+        "account": "9336b3ba416f0565",
+        "text": "payload",
+        "phonenumbervalue": "",
+        "apikeyvalue": "",
+        "apikeyinputtypemessage": "msg",
+        "phonenumberinputtypemessage": "msg",
+        "inputtypemessage": "msg",
+        "rejectssl": false,
+        "x": 700,
+        "y": 1380,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1a0d593a73a32087",
+        "type": "function",
+        "z": "a271d9fc22e6e39d",
+        "d": true,
+        "name": "function 3",
+        "func": "var d = msg.payload;\n\nmsg.payload = \"A distancia lida no sensor é \" + d + \" cm\"\n\nif (d <= 10){\n    msg.payload = \"Cheio \" + d\n} else if (d > 10 && d <= 35){\n    msg.payload = d\n} else if (d > 35) {\n    msg.payload = \"vazio \" + d\n}\n\n\nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 1220,
+        "wires": [
+            [
+                "80d99516057e4022"
+            ]
+        ]
+    },
+    {
+        "id": "e505f3c5a18957c8",
+        "type": "function",
+        "z": "a271d9fc22e6e39d",
+        "name": "function 5",
+        "func": "var d = msg.payload;\n\nmsg.payload = \"\"\n\nif (d <= 15){\n    msg.payload = \"Lixeira cheia\"\n} \nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 1440,
+        "wires": [
+            [
+                "f1633bcd57893008",
+                "145e5bd779466ee7"
+            ]
+        ]
+    },
+    {
+        "id": "145e5bd779466ee7",
+        "type": "sendsms",
+        "z": "a271d9fc22e6e39d",
+        "d": true,
+        "creds": "231db9d674d666e5",
+        "to": "551199255128",
+        "fr": "Vonage APIs",
+        "text": "beta",
+        "unicode": false,
+        "x": 690,
+        "y": 1460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "c545ea67ec386f7d",
+        "type": "function",
+        "z": "a271d9fc22e6e39d",
+        "name": "function 6",
+        "func": "var distancia = msg.payload;\nvar vol = (45-((distancia * 3.14 * (18*18))/1000));\nmsg.payload = vol;\nreturn msg;\n\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 500,
+        "y": 1300,
+        "wires": [
+            [
+                "415d242dd2b8eccb"
+            ]
+        ]
+    },
+    {
+        "id": "4e2a64169f90c971",
+        "type": "mqtt-broker",
+        "name": "brokerURL",
+        "broker": "broker.hivemq.com",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "9336b3ba416f0565",
+        "type": "node-red-contrib-whatsapp-cmb-account",
+        "name": "Teste"
+    },
+    {
+        "id": "16aa5674a936393f",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": 8086,
+        "protocol": "http",
+        "database": "database",
+        "name": "grpIOT",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "https://us-east-1-1.aws.cloud2.influxdata.com",
+        "timeout": 10,
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "231db9d674d666e5",
+        "type": "nexmobasic"
+    },
+    {
+        "id": "b6cb2c646daa6d2f",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-contrib-whatsapp-cmb": "1.0.3",
+            "node-red-contrib-influxdb": "0.7.0",
+            "node-red-contrib-nexmo": "3.3.1"
+        }
+    }
+]
