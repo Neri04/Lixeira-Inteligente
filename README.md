@@ -35,7 +35,6 @@ O sistema opera através da seguinte arquitetura integrada:
 * `/backend`: Arquivo JSON com o fluxo de nós (nodes) do Node-RED.
 * `/database`: Detalhes da estrutura (Bucket e Measurements) do InfluxDB.
 * `/dashboards`: Arquivo JSON para importação dos painéis no Grafana.
-* `/simulacao`: Link e arquivos da simulação no Wokwi.
 
 ##  Resultados e Dashboards
 
